@@ -1,0 +1,31 @@
+@startuml
+hide footbox
+autonumber
+
+actor client
+
+box "FRONTEND"
+participant ListDeliveryScreen
+participant AddDeliveryTrakerScreen
+end box
+
+box "BACKEND"
+participant API
+participant database
+end box
+
+client -> ListDeliveryScreen: selecciona \nagregar un envio
+ListDeliveryScreen -> AddDeliveryTrakerScreen: se muestra la \npantalla para agregar \nun envio
+client -> AddDeliveryTrakerScreen: Selecciona si quiere agregar por codigo de envio \no por escaneo QR y agrega el codigo
+AddDeliveryTrakerScreen-> API: POST /register-delivery\n { \n\ttoken: "hash_token", \n\tid_traker_delivery: "id_value" \n}
+API->API: validar_token
+
+group if (token valid)
+API -> database: Asocia el envio al usuario
+API -> ListDeliveryScreen: {\n\tstatus:"SUCCESS", \n\terrors:null, \n\tdata:{...}\n}
+
+else
+  API -> ListDeliveryScreen:  {\n\tstatus:"ERROR_TOKEN", \n\terrors:{...}, \n\tdata:null\n}
+end
+
+@enduml

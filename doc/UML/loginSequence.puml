@@ -1,0 +1,25 @@
+@startuml
+hide footbox
+autonumber
+
+actor client
+
+box "BACKEND"
+participant logger
+participant validator
+end box
+
+
+
+
+client -> logger: /user/login\n{ "user": "h", pass: "123"... }
+logger -> validator: validar_datos\n{ "user": "h", pass: "123"... }
+
+group if (login valid)
+    validator -> client: {\n\tstatus:"SUCCESS", \n\terrors:{...}, \n\tdata:{...}\n}
+
+else
+    validator -> client: {\n\tstatus:"ERROR_LOGIN", \n\terrors:{...}, \n\tdata:{...}\n}
+end
+
+@enduml

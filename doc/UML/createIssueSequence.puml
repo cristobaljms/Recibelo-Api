@@ -1,0 +1,36 @@
+@startuml
+hide footbox
+autonumber
+
+actor client
+
+box "FRONTEND"
+participant ListDeliveryScreen
+participant issueTypeScreen
+participant issueScreen
+end box
+
+box "BACKEND"
+participant API
+participant database
+end box
+
+
+client -> ListDeliveryScreen: selecciona \nreportar un\nproblema con \nel envio
+ListDeliveryScreen -> issueTypeScreen: se muestra la \npantalla de tipos\nde problema
+client -> issueTypeScreen: Selecciona el \ntipo de problema
+issueTypeScreen-> issueScreen: se abre el formulario \npara crear el problema
+
+client -> issueScreen: Escribe el problema\n y presiona enviar
+issueScreen-> API: POST /issues\n { \n\t"delivery_id": "ada23eq2dq",\n\t"issue_type": "1231",\n\tdescription: "descriptionValue" \n}
+API->API: validar_token
+
+group if (token valid)
+API -> database: Crea el problema
+API -> ListDeliveryScreen: {\n\tstatus:"SUCCESS", \n\terrors:{...}, \n\tdata:{...}\n}
+
+else
+  API -> ListDeliveryScreen: {\n\tstatus:"ERROR_TOKEN", \n\terrors:{...}, \n\tdata:{...}\n}
+end
+
+@enduml

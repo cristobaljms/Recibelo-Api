@@ -1,0 +1,22 @@
+@startuml
+hide footbox
+autonumber
+
+actor client
+
+box "BACKEND"
+participant register
+participant validator
+end box
+
+
+client -> register: /user/register\n{ "user": "h", pass: "123"... }
+register -> validator: validar_datos\n{ "user": "h", pass: "123"... }
+
+group if (user exist)
+  validator -> client: {\n\tstatus:"ERROR_USER_EXIST", \n\terrors:{...}, \n\tdata:{...}\n}
+else
+  validator -> client: {\n\tstatus:"SUCCESS", \n\terrors:{...}, \n\tdata:{...}\n}
+end
+
+@enduml

@@ -1,0 +1,32 @@
+@startuml
+hide footbox
+autonumber
+
+actor client
+
+box "FRONTEND"
+participant VerificationScreen
+end box
+
+box "BACKEND"
+participant API
+participant database
+end box
+
+client -> VerificationScreen: Luego de registrarse \nse le envia al correo del usuario \nun codigo de verificacion \nque debe insertar
+VerificationScreen -> API: GET /verification-account/{verificationCode}/{userID}
+API -> API: validar_token
+
+group if (token valid)
+    API -> database: consultar data con el UserID
+    group if (varification code valid)
+        API -> database: Actualizar el user a verificado
+        API -> VerificationScreen: {\n\tstatus:"SUCCESS", \n\terrors:{...}, \n\tdata:{...}\n}
+    else
+        API -> VerificationScreen:{\n\tstatus:"ERROR_CODE_INVALID", \n\terrors:{...}, \n\tdata:{...}\n}
+    end
+else
+    API -> VerificationScreen: {\n\tstatus:"ERROR_TOKEN", \n\terrors:{...}, \n\tdata:{...}\n}
+end
+
+@enduml

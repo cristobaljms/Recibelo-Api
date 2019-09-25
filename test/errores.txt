@@ -1,0 +1,10 @@
+1)
+    {
+      "message": "Error al decodificar data",
+      "data": null,
+      "errors": {
+        "Offset": 72
+      }
+    }
+    Esto probablemente pasa cuando se hace una peticion post y se envian en el body campos de tipos errados
+    por ejemplo que se envie un string cuando se deberia enviar un entero
